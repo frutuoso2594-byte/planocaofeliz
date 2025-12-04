@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico de Ansiedade Canina & O Plano Diário</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fafaf9; /* Stone 50 */
+            scroll-behavior: smooth;
+        }
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .btn-pulse {
+            animation: pulse-brown 2s infinite;
+        }
+        @keyframes pulse-brown {
+            0% { box-shadow: 0 0 0 0 rgba(180, 83, 9, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(180, 83, 9, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(180, 83, 9, 0); }
+        }
+        .hero-pattern {
+            background-color: #fafaf9;
+            background-image: radial-gradient(#a8a29e 0.5px, transparent 0.5px), radial-gradient(#a8a29e 0.5px, #fafaf9 0.5px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            opacity: 0.2;
+        }
+        .option-card {
+            transition: all 0.2s ease;
+        }
+        .option-card:hover {
+            border-color: #d97706; /* Amber 600 */
+            background-color: #fffbeb; /* Amber 50 */
+            transform: translateY(-2px);
+        }
+        .hidden-screen {
+            display: none !important;
+        }
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Custom Checkbox Style - Brown Theme */
+        .custom-radio:checked + div {
+            border-color: #b45309; /* Amber 700 */
+            background-color: #fef3c7; /* Amber 100 */
+            box-shadow: 0 4px 6px -1px rgba(67, 20, 7, 0.1);
+        }
+        .custom-radio:checked + div .check-icon {
+            background-color: #b45309;
+            border-color: #b45309;
+        }
+        .check-icon-inner {
+            display: none;
+        }
+        .custom-radio:checked + div .check-icon .check-icon-inner {
+            display: block;
+        }
+    </style>
+</head>
+<body class="text-stone-800 antialiased min-h-screen">
+
+    <!-- ======================= 1. TELA DE BOAS-VINDAS ======================= -->
+    <div id="welcome-screen" class="min-h-screen flex flex-col items-center justify-center p-4 md:p-8 bg-[#fafaf9] relative overflow-hidden">
+        <div class="absolute inset-0 hero-pattern z-0"></div>
+        
+        <div class="max-w-xl w-full bg-white shadow-2xl rounded-3xl overflow-hidden relative z-10 fade-in border border-stone-200">
+            <div class="h-3 bg-gradient-to-r from-[#5D4037] to-[#8D6E63] w-full"></div> <!-- Brown Gradient -->
+            <div class="p-8 md:p-10 text-center">
+                <div class="mb-6 relative w-full h-56 rounded-2xl overflow-hidden shadow-lg group border border-stone-100">
+                    <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Cão com olhar culpado" class="object-cover w-full h-full transform group-hover:scale-105 transition duration-500 sepia-[.2]">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#2c1810]/80 via-transparent to-transparent flex items-end justify-center pb-4">
+                        <span class="text-white/90 text-sm font-medium px-4 py-1 bg-[#2c1810]/40 backdrop-blur-sm rounded-full border border-white/20">Diagnóstico Comportamental</span>
+                    </div>
+                </div>
+                
+                <h1 class="text-2xl md:text-3xl font-extrabold text-[#4e342e] mb-3 font-heading leading-tight">
+                    Seu cão destrói a casa, late demais ou não sabe ficar sozinho?
+                </h1>
+                
+                <p class="text-amber-700 font-semibold mb-6 text-lg">
+                    Entenda a raiz emocional desse comportamento em 2 minutos.
+                </p>
+                
+                <p class="text-stone-600 mb-8 leading-relaxed text-sm md:text-base px-2">
+                    Comportamentos "ruins" não são birra, são gritos de socorro. Responda a 13 perguntas para mapear os gatilhos de ansiedade do seu cão e descobrir como trazer paz de volta ao seu lar.
+                </p>
+                
+                <button onclick="startQuiz()" class="w-full bg-gradient-to-r from-amber-600 to-orange-700 hover:from-amber-700 hover:to-orange-800 text-white font-bold py-4 px-6 rounded-xl shadow-lg transform transition hover:-translate-y-1 hover:shadow-xl flex items-center justify-center gap-3 text-lg uppercase tracking-wide border-b-4 border-amber-800">
+                    <span>Iniciar Diagnóstico</span>
+                    <i class="fas fa-paw"></i>
+                </button>
+                
+                <div class="mt-6 flex items-center justify-center gap-2 text-xs text-stone-400 font-medium">
+                    <i class="fas fa-shield-alt text-amber-600"></i>
+                    <span>Baseado em protocolos de bem-estar canino</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================= 2. TELA DO QUIZ ======================= -->
+    <div id="quiz-screen" class="hidden-screen min-h-screen flex flex-col items-center justify-center p-4 bg-[#f5f5f4]">
+        <div class="max-w-lg w-full bg-white shadow-xl rounded-2xl overflow-hidden flex flex-col h-[85vh] md:h-auto md:min-h-[600px] border border-stone-200">
+            <!-- Header -->
+            <div class="bg-white border-b border-stone-100 p-4">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-bold text-amber-800 tracking-wider">PERGUNTA <span id="current-question-num">1</span> DE <span id="total-questions-count">13</span></span>
+                    <span class="text-xs text-stone-400 font-medium italic">Análise em andamento...</span>
+                </div>
+                <div class="h-2 w-full bg-stone-100 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-amber-600 transition-all duration-500 rounded-full" style="width: 5%"></div>
+                </div>
+            </div>
+
+            <!-- Scroll Area -->
+            <div id="question-container" class="flex-grow p-6 overflow-y-auto bg-white">
+                <!-- Pergunta injetada aqui -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================= 3. TELA DE PROCESSAMENTO ======================= -->
+    <div id="loading-screen" class="hidden-screen fixed inset-0 z-50 bg-[#fafaf9] flex flex-col items-center justify-center p-8 text-center">
+        <div class="relative w-24 h-24 mb-8">
+            <div class="absolute inset-0 border-4 border-stone-200 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-t-amber-600 border-r-amber-600 rounded-full animate-spin"></div>
+            <i class="fas fa-brain absolute inset-0 flex items-center justify-center text-amber-700 text-2xl opacity-50"></i>
+        </div>
+        <h3 id="loading-text" class="text-2xl font-bold text-[#4e342e] font-heading mb-2">Processando Respostas...</h3>
+        <p class="text-stone-500 text-sm max-w-xs mx-auto">Identificando padrões de cortisol e gatilhos ambientais.</p>
+        
+        <!-- Checklist dinâmico -->
+        <div class="mt-8 space-y-3 text-left max-w-xs mx-auto">
+            <div class="flex items-center gap-3 text-sm text-stone-600 opacity-50" id="step-1">
+                <i class="far fa-circle text-amber-600"></i> Analisando sinais físicos
+            </div>
+            <div class="flex items-center gap-3 text-sm text-stone-600 opacity-50" id="step-2">
+                <i class="far fa-circle text-amber-600"></i> Avaliando rotina e ambiente
+            </div>
+            <div class="flex items-center gap-3 text-sm text-stone-600 opacity-50" id="step-3">
+                <i class="far fa-circle text-amber-600"></i> Gerando estratégia de rotina
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================= 4. PÁGINA DE VENDAS (RESULTADO) ======================= -->
+    <div id="result-screen" class="hidden-screen bg-[#fafaf9] pb-20 fade-in">
+        
+        <!-- HEADER DE ALERTA -->
+        <div id="result-header-bg" class="bg-[#3E2723] text-white pt-8 pb-16 px-4 text-center rounded-b-[2.5rem] shadow-xl relative z-10 border-b-4 border-[#5D4037]">
+            <div class="max-w-3xl mx-auto">
+                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1 rounded-full text-sm font-medium mb-4 border border-white/20 text-stone-200">
+                    <i class="fas fa-file-medical-alt"></i> Diagnóstico Concluído
+                </div>
+                <h1 id="sales-headline" class="text-2xl md:text-4xl font-extrabold font-heading leading-tight mb-4 drop-shadow-md text-[#fff8e1]">
+                    ALERTA: Nível de Estresse <br><span class="bg-[#b71c1c] text-white px-2 rounded transform -skew-x-6 inline-block mt-2 shadow-lg">CRÍTICO DETECTADO</span>
+                </h1>
+                <p id="sales-subheadline" class="text-stone-300 text-lg md:text-xl max-w-2xl mx-auto font-medium">
+                    Seu cão não está sendo "teimoso". Ele está vivendo em estado de alerta e precisa de ajuda para relaxar.
+                </p>
+            </div>
+        </div>
+
+        <!-- CONTAINER PRINCIPAL -->
+        <div class="max-w-4xl mx-auto px-4 -mt-10 relative z-20">
+            
+            <!-- RESULTADO DETALHADO -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 md:p-10 mb-8 border-t-4 border-amber-600">
+                <h2 class="text-2xl font-bold text-[#3E2723] mb-6 flex items-center gap-3">
+                    <i class="fas fa-microscope text-amber-700"></i>
+                    O Que Está Acontecendo na Mente Dele:
+                </h2>
+                
+                <div class="space-y-6 text-stone-700 leading-relaxed text-lg">
+                    <p id="dynamic-diagnosis-text">
+                        <!-- Texto inserido via JS -->
+                    </p>
+                    
+                    <div class="bg-[#fff8e1] border-l-4 border-amber-500 p-6 rounded-r-lg">
+                        <h4 class="font-bold text-[#5D4037] mb-2 text-lg"><i class="fas fa-info-circle"></i> A Ciência Explica</h4>
+                        <p class="text-stone-700 text-base">
+                            Quando um cão está ansioso, seu corpo libera <strong>cortisol e adrenalina</strong> (hormônios do estresse). Isso coloca o cérebro dele em modo "Luta ou Fuga", desligando a capacidade de pensar e obedecer. É fisiológico, não comportamental.
+                        </p>
+                    </div>
+
+                    <p>
+                        Se você já tentou:
+                        <ul class="list-none space-y-2 mt-2 ml-2 text-sm md:text-base text-stone-600">
+                            <li>❌ Dar broncas (que só aumentam a insegurança).</li>
+                            <li>❌ Cansá-lo fisicamente (o que pode aumentar o cortisol).</li>
+                            <li>❌ Deixá-lo chorando para "aprender" (gerando traumas de abandono).</li>
+                        </ul>
+                    </p>
+                    
+                    <p class="font-bold text-[#4e342e]">
+                        Você precisa parar de tratar o sintoma e começar a tratar a causa: a falta de previsibilidade e segurança emocional.
+                    </p>
+                </div>
+            </div>
+
+            <!-- A SOLUÇÃO -->
+            <div class="bg-[#2c1810] text-white rounded-3xl p-8 md:p-12 mb-12 text-center relative overflow-hidden shadow-2xl border border-[#4e342e]">
+                <!-- Texture overlay -->
+                <div class="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] opacity-20"></div>
+                
+                <span class="text-amber-400 font-bold tracking-widest text-xs uppercase mb-4 block relative z-10">Método Baseado em Bem-Estar Canino</span>
+                <h2 class="text-2xl md:text-4xl font-extrabold font-heading mb-6 relative z-10 text-[#fff8e1]">
+                    O Protocolo: <span class="text-amber-500">Mente Calma</span>
+                </h2>
+                <p class="text-stone-300 text-lg mb-8 max-w-2xl mx-auto leading-relaxed relative z-10">
+                    Não é adestramento tradicional. É um guia de <strong>reestruturação emocional</strong>. Um manual prático para entender a raiz do problema e aplicar soluções ambientais e de rotina.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-6 text-left relative z-10">
+                    <div class="bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10 hover:bg-white/10 transition group">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="bg-amber-700 p-2 rounded-lg text-white group-hover:bg-amber-600 transition"><i class="fas fa-brain"></i></div>
+                            <h4 class="font-bold text-lg text-amber-100">Psicologia Canina</h4>
+                        </div>
+                        <p class="text-sm text-stone-300">Entenda os sinais invisíveis de estresse e como o cérebro do seu cão processa o medo da separação e barulhos.</p>
+                    </div>
+                    <div class="bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10 hover:bg-white/10 transition group">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="bg-amber-700 p-2 rounded-lg text-white group-hover:bg-amber-600 transition"><i class="fas fa-home"></i></div>
+                            <h4 class="font-bold text-lg text-amber-100">Ambiente Controlado</h4>
+                        </div>
+                        <p class="text-sm text-stone-300">Transforme sua casa em um santuário sensorial (luz, som e cheiro) que induz o relaxamento involuntário.</p>
+                    </div>
+                    <div class="bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10 hover:bg-white/10 transition group">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="bg-amber-700 p-2 rounded-lg text-white group-hover:bg-amber-600 transition"><i class="fas fa-utensils"></i></div>
+                            <h4 class="font-bold text-lg text-amber-100">Nutrição Calmante</h4>
+                        </div>
+                        <p class="text-sm text-stone-300">Receitas com ingredientes funcionais (triptofano e magnésio) que atuam como ansiolíticos naturais.</p>
+                    </div>
+                    <div class="bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10 hover:bg-white/10 transition group">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="bg-amber-700 p-2 rounded-lg text-white group-hover:bg-amber-600 transition"><i class="fas fa-clock"></i></div>
+                            <h4 class="font-bold text-lg text-amber-100">Rotina & Emergência</h4>
+                        </div>
+                        <p class="text-sm text-stone-300">Cronogramas de previsibilidade e protocolos exatos para crises (trovões, visitas e pânico).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STACK DE OFERTA (BÔNUS) -->
+            <div class="mb-12">
+                <h3 class="text-center text-xl md:text-2xl font-bold text-[#4e342e] mb-8 font-heading">
+                    Conteúdo Completo: O Guia Principal + <span class="text-amber-700">4 Manuais Exclusivos</span>
+                </h3>
+                
+                <div class="space-y-4">
+                    <!-- Manual Principal -->
+                    <div class="flex items-start md:items-center bg-[#fdfbf7] p-5 rounded-xl shadow-sm border border-amber-200 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 bg-amber-700 text-white text-[10px] px-2 py-1 rounded-br-lg font-bold">LIVRO PRINCIPAL</div>
+                        <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center text-amber-700 text-2xl flex-shrink-0 mr-4 shadow-sm mt-2 md:mt-0 border border-amber-100">
+                            <i class="fas fa-book-reader"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-[#3E2723] text-lg">Entendendo a Mente de um Cão Ansioso</h4>
+                            <p class="text-sm text-stone-600 mt-1">A Raiz do Comportamento que Ninguém Te Explicou. Descubra porque seu cão age assim e pare de tratar apenas os sintomas.</p>
+                        </div>
+                    </div>
+
+                    <!-- Bônus 1 -->
+                    <div class="flex items-start md:items-center bg-white p-4 rounded-xl shadow-sm border border-stone-200">
+                        <div class="w-12 h-12 bg-stone-100 rounded-lg flex items-center justify-center text-stone-600 text-xl flex-shrink-0 mr-4 mt-1 md:mt-0">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-[#4e342e]">1. Guia de Ambientes Calmantes</h4>
+                            <p class="text-xs text-stone-500 mt-1">Como Transformar Sua Casa num Refúgio Antiansiedade. Aprenda a usar luz, som e cheiro a favor do seu cão.</p>
+                            <span class="text-xs text-amber-700 font-bold mt-1 block">INCLUSO GRATUITAMENTE</span>
+                        </div>
+                    </div>
+                    <!-- Bônus 2 -->
+                    <div class="flex items-start md:items-center bg-white p-4 rounded-xl shadow-sm border border-stone-200">
+                        <div class="w-12 h-12 bg-[#fff8e1] rounded-lg flex items-center justify-center text-amber-600 text-xl flex-shrink-0 mr-4 mt-1 md:mt-0">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-[#4e342e]">2. Alimentação Calmante</h4>
+                            <p class="text-xs text-stone-500 mt-1">Receitas Naturais para Reduzir a Ansiedade. Ingredientes ricos em triptofano que ajudam na produção de serotonina.</p>
+                            <span class="text-xs text-amber-700 font-bold mt-1 block">INCLUSO GRATUITAMENTE</span>
+                        </div>
+                    </div>
+                    <!-- Bônus 3 -->
+                    <div class="flex items-start md:items-center bg-white p-4 rounded-xl shadow-sm border border-stone-200">
+                        <div class="w-12 h-12 bg-stone-100 rounded-lg flex items-center justify-center text-stone-600 text-xl flex-shrink-0 mr-4 mt-1 md:mt-0">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-[#4e342e]">3. Rotina Antiansiedade: O Plano Diário</h4>
+                            <p class="text-xs text-stone-500 mt-1">O cronograma passo a passo ideal para um cão mais calmo e feliz. Estrutura previsível para reduzir o estresse.</p>
+                            <span class="text-xs text-amber-700 font-bold mt-1 block">INCLUSO GRATUITAMENTE</span>
+                        </div>
+                    </div>
+                     <!-- Bônus 4 -->
+                     <div class="flex items-start md:items-center bg-white p-4 rounded-xl shadow-sm border border-stone-200">
+                        <div class="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center text-red-700 text-xl flex-shrink-0 mr-4 mt-1 md:mt-0">
+                            <i class="fas fa-kit-medical"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-[#4e342e]">4. Plano de Emergência</h4>
+                            <p class="text-xs text-stone-500 mt-1">O que fazer EXATAMENTE em crises específicas (tempestades, fogos, etc) para evitar o pânico.</p>
+                            <span class="text-xs text-amber-700 font-bold mt-1 block">INCLUSO GRATUITAMENTE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ÁREA DE PREÇO (CHECKOUT) -->
+            <div id="offer-section" class="bg-white rounded-3xl shadow-2xl overflow-hidden border-2 border-amber-600 relative">
+                <div class="bg-amber-500 py-3 text-center text-white font-bold text-sm uppercase tracking-wider">
+                    Oferta Especial por Tempo Limitado
+                </div>
+                
+                <div class="p-8 text-center">
+                    <p class="text-stone-400 text-lg line-through mb-2">Valor Total do Pacote: R$ 147,90</p>
+                    <div class="flex items-center justify-center gap-2 mb-4">
+                        <span class="text-2xl text-stone-600">Hoje por apenas:</span>
+                    </div>
+                    <div class="text-6xl font-extrabold text-[#3E2723] mb-2 tracking-tight font-heading">
+                        R$ 27,90
+                    </div>
+                    <p class="text-amber-700 font-bold mb-8 text-xs uppercase tracking-wide">Acesso Vitalício aos 5 Manuais em PDF</p>
+
+                    <button onclick="window.location.href='https://pay.kiwify.com.br/mvL2LBz'" class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-5 px-4 rounded-xl shadow-lg transform transition hover:-translate-y-1 text-lg md:text-xl uppercase btn-pulse flex flex-col items-center leading-tight border-b-4 border-green-800">
+                        <span>Quero Baixar o Plano Agora</span>
+                        <span class="text-xs font-normal opacity-90 mt-1">e começar a ajudar meu cão hoje</span>
+                    </button>
+
+                    <div class="mt-6 flex flex-col items-center gap-4">
+                        <img src="https://logopng.com.br/logos/pix-106.png" class="h-6 opacity-60 grayscale hover:grayscale-0 transition" alt="Aceitamos PIX">
+                        
+                        <div class="flex items-center justify-center gap-2 text-red-700 font-bold bg-red-50 px-4 py-2 rounded-full text-xs border border-red-100">
+                            <i class="fas fa-stopwatch animate-pulse"></i>
+                            Oferta expira em: <span id="timer">14:59</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Garantia -->
+                <div class="bg-stone-50 p-6 border-t border-stone-200 flex items-center justify-center gap-4">
+                    <img src="https://cdn-icons-png.flaticon.com/512/953/953818.png" class="w-12 h-12 grayscale opacity-80" alt="Garantia">
+                    <div class="text-left">
+                        <h5 class="font-bold text-stone-800">Garantia de 7 Dias</h5>
+                        <p class="text-xs text-stone-500">Se não gostar do conteúdo, devolvemos 100% do valor. Sem perguntas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ -->
+            <div class="mt-16 mb-12">
+                <h3 class="text-center text-2xl font-bold text-[#4e342e] mb-8 font-heading">Perguntas Frequentes</h3>
+                <div class="space-y-3">
+                    <details class="bg-white p-4 rounded-lg shadow-sm cursor-pointer group border border-stone-100">
+                        <summary class="font-bold text-[#5D4037] flex justify-between items-center list-none text-sm md:text-base">
+                            Em quanto tempo verei resultados?
+                            <i class="fas fa-chevron-down text-amber-700 group-open:rotate-180 transition"></i>
+                        </summary>
+                        <p class="text-stone-600 mt-3 text-sm leading-relaxed">Pequenas mudanças podem ser notadas em dias, mas a modificação comportamental profunda leva tempo e consistência (em média 3 a 6 meses). O Plano Diário te dá as ferramentas para iniciar essa jornada hoje.</p>
+                    </details>
+                    <details class="bg-white p-4 rounded-lg shadow-sm cursor-pointer group border border-stone-100">
+                        <summary class="font-bold text-[#5D4037] flex justify-between items-center list-none text-sm md:text-base">
+                            Preciso comprar remédios ou equipamentos caros?
+                            <i class="fas fa-chevron-down text-amber-700 group-open:rotate-180 transition"></i>
+                        </summary>
+                        <p class="text-stone-600 mt-3 text-sm leading-relaxed">Não. O foco do método é rotina, ambiente e alimentação natural. Sugerimos itens opcionais como brinquedos de enriquecimento, mas ensinamos versões caseiras.</p>
+                    </details>
+                    <details class="bg-white p-4 rounded-lg shadow-sm cursor-pointer group border border-stone-100">
+                        <summary class="font-bold text-[#5D4037] flex justify-between items-center list-none text-sm md:text-base">
+                            Como recebo o acesso aos manuais?
+                            <i class="fas fa-chevron-down text-amber-700 group-open:rotate-180 transition"></i>
+                        </summary>
+                        <p class="text-stone-600 mt-3 text-sm leading-relaxed">Imediatamente após a confirmação do pagamento, você receberá um e-mail com o link para baixar os 5 arquivos PDF. Você pode ler no celular, tablet ou computador.</p>
+                    </details>
+                </div>
+            </div>
+
+            <footer class="text-center text-stone-400 text-xs py-8">
+                <p>&copy; 2024 Plano Diário Canino. Todos os direitos reservados.</p>
+                <p class="mt-2">Este site não substitui aconselhamento veterinário profissional.</p>
+            </footer>
+
+        </div>
+
+        <!-- Sticky Mobile Button (Aparece ao rolar) -->
+        <div id="sticky-cta" class="fixed bottom-0 left-0 right-0 bg-[#fafaf9] border-t border-stone-200 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] transform translate-y-full transition-transform duration-300 z-50 md:hidden">
+            <button class="w-full bg-green-600 text-white font-bold py-3 rounded-lg uppercase tracking-wide shadow-md text-sm" onclick="window.location.href='https://pay.kiwify.com.br/mvL2LBz'">
+                Quero Ajudar Meu Cão Agora
+            </button>
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Dados do Quiz (13 Perguntas)
+        const questions = [
+            {
+                title: "Quando você sai de casa e o deixa sozinho, qual é a reação dele?",
+                microcopy: "Isso ajuda a medir o nível de dependência emocional.",
+                options: [
+                    { text: "Ele fica tranquilo, dorme ou brinca com seus brinquedos.", score: 1 },
+                    { text: "Ele chora ou late por alguns minutos, mas depois se acalma.", score: 3 },
+                    { text: "Entra em pânico, late sem parar, arranha portas ou destrói objetos.", score: 5 }
+                ]
+            },
+            {
+                title: "Como descreveria o estado dos seus móveis e objetos?",
+                microcopy: "Entendendo a energia acumulada e tédio.",
+                options: [
+                    { text: "Intactos. Ele só morde os brinquedos dele.", score: 1 },
+                    { text: "Às vezes encontro um chinelo roído ou algo fora do lugar.", score: 3 },
+                    { text: "Destruição frequente (pés de mesa, sofá, controle remoto).", score: 5 }
+                ]
+            },
+            {
+                title: "Você nota algum destes sinais físicos frequentemente?",
+                microcopy: "Identificando sintomas silenciosos de estresse.",
+                options: [
+                    { text: "Não, ele parece relaxado a maior parte do tempo.", score: 1 },
+                    { text: "Às vezes fica ofegante sem calor ou se coça um pouco.", score: 3 },
+                    { text: "Lambe patas compulsivamente, treme ou anda em círculos.", score: 5 }
+                ]
+            },
+            {
+                title: "Como é a reação dele quando você chega em casa?",
+                microcopy: "A euforia excessiva muitas vezes é sinal de insegurança.",
+                options: [
+                    { text: "Vem feliz, abana o rabo, mas logo se acalma.", score: 1 },
+                    { text: "Pula, late muito e demora para baixar a energia.", score: 3 },
+                    { text: "Urina de emoção, grita ou parece que vai 'explodir' de ansiedade.", score: 5 }
+                ]
+            },
+            {
+                title: "Ele consegue ficar em um cômodo diferente de você?",
+                microcopy: "A incapacidade de ficar só, mesmo com você em casa, é o 'efeito sombra'.",
+                options: [
+                    { text: "Sim, ele fica deitado na sala enquanto estou no quarto.", score: 1 },
+                    { text: "Ele me segue, mas aceita se eu fechar a porta por pouco tempo.", score: 3 },
+                    { text: "Não, ele é minha sombra. Se fecho a porta do banheiro, ele arranha.", score: 5 }
+                ]
+            },
+            {
+                title: "Sobre a sua rotina atual com ele:",
+                microcopy: "Avaliando o ambiente sem julgamentos.",
+                options: [
+                    { text: "Temos horários fixos para comer, passear e brincar.", score: 1 },
+                    { text: "A rotina é um pouco corrida, passeamos quando dá.", score: 3 },
+                    { text: "Não temos horários definidos, cada dia é diferente.", score: 5 }
+                ]
+            },
+            {
+                title: "Como ele reage a barulhos no corredor ou rua?",
+                microcopy: "A hipervigilância impede o relaxamento profundo.",
+                options: [
+                    { text: "Olha curioso, mas não late ou ignora.", score: 1 },
+                    { text: "Late um pouco para avisar, mas obedece quando peço silêncio.", score: 3 },
+                    { text: "Entra em frenesi, corre para a porta e late descontroladamente.", score: 5 }
+                ]
+            },
+            {
+                title: "Como é a hora do passeio na rua?",
+                microcopy: "Avaliando reatividade e medo.",
+                options: [
+                    { text: "Caminha ao meu lado, tranquilo e cheirando o chão.", score: 1 },
+                    { text: "Puxa a guia no começo pela empolgação, mas depois acalma.", score: 3 },
+                    { text: "Um pesadelo. Puxa o tempo todo, late para tudo ou trava de medo.", score: 5 }
+                ]
+            },
+            {
+                title: "Ao encontrar estranhos ou outros cães, qual a reação?",
+                microcopy: "A reatividade muitas vezes nasce do medo.",
+                options: [
+                    { text: "Cheira, abana o rabo ou ignora.", score: 1 },
+                    { text: "Fica desconfiado, se esconde ou late de longe.", score: 3 },
+                    { text: "Avança (tenta morder) ou paralisa e urina de medo.", score: 5 }
+                ]
+            },
+            {
+                title: "Como ele se comporta na hora de comer?",
+                microcopy: "A relação com a comida indica ansiedade.",
+                options: [
+                    { text: "Come devagar e tranquilo.", score: 1 },
+                    { text: "Seletivo, às vezes só come se eu estiver perto.", score: 3 },
+                    { text: "Engole sem mastigar (aspira a comida) ou recusa comer por dias.", score: 5 }
+                ]
+            },
+            {
+                title: "Como ele se comporta durante passeios de carro?",
+                microcopy: "O confinamento em movimento pode ser um gatilho.",
+                options: [
+                    { text: "Viaja tranquilo, olhando a paisagem ou dormindo.", score: 1 },
+                    { text: "Fica agitado, choraminga ou baba um pouco.", score: 3 },
+                    { text: "Vomita, treme muito, late ou tenta pular em pânico.", score: 5 }
+                ]
+            },
+            {
+                title: "Como é o sono dele durante a noite?",
+                microcopy: "O descanso é fundamental para regulação hormonal.",
+                options: [
+                    { text: "Dorme a noite toda, pesadamente (12-14h por dia no total).", score: 1 },
+                    { text: "Acorda com qualquer barulho, fica alerta.", score: 3 },
+                    { text: "Não dorme bem, anda pela casa de madrugada.", score: 5 }
+                ]
+            },
+            {
+                title: "O que acontece em dias de tempestade ou fogos?",
+                microcopy: "Teste final de segurança emocional.",
+                options: [
+                    { text: "Ele nem liga, continua dormindo ou brincando.", score: 1 },
+                    { text: "Fica assustado, procura onde se esconder mas aceita carinho.", score: 3 },
+                    { text: "Entra em desespero total, baba, treme e tenta fugir.", score: 5 }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let totalScore = 0;
+
+        // Elementos do DOM
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const loadingScreen = document.getElementById('loading-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const questionContainer = document.getElementById('question-container');
+        const progressBar = document.getElementById('progress-bar');
+        const currentQNum = document.getElementById('current-question-num');
+        const totalQCount = document.getElementById('total-questions-count');
+        const stickyCTA = document.getElementById('sticky-cta');
+
+        // Atualizar contador total
+        totalQCount.innerText = questions.length;
+
+        // Iniciar Quiz
+        function startQuiz() {
+            welcomeScreen.classList.add('hidden-screen');
+            quizScreen.classList.remove('hidden-screen');
+            renderQuestion();
+        }
+
+        // Renderizar Pergunta
+        function renderQuestion() {
+            const q = questions[currentQuestionIndex];
+            
+            // Atualizar barra de progresso
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            currentQNum.innerText = currentQuestionIndex + 1;
+
+            // HTML da Pergunta
+            questionContainer.innerHTML = `
+                <div class="fade-in max-w-2xl mx-auto">
+                    <h2 class="text-xl md:text-2xl font-bold text-[#4e342e] mb-3 font-heading leading-snug">${q.title}</h2>
+                    <div class="flex items-center gap-2 mb-6 bg-[#fff8e1] p-3 rounded-lg inline-block border border-amber-200">
+                        <i class="fas fa-lightbulb text-amber-600 text-sm"></i>
+                        <span class="text-sm text-amber-800 font-medium italic">${q.microcopy}</span>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        ${q.options.map((opt, index) => `
+                            <label class="cursor-pointer block group">
+                                <input type="radio" name="option" class="hidden custom-radio" onchange="selectOption(${opt.score})">
+                                <div class="option-card border-2 border-stone-200 rounded-xl p-5 flex items-start md:items-center gap-4 bg-white shadow-sm group-hover:shadow-md">
+                                    <div class="w-6 h-6 rounded-full border-2 border-stone-300 flex items-center justify-center flex-shrink-0 check-icon transition-all mt-1 md:mt-0">
+                                        <div class="w-3 h-3 rounded-full bg-white check-icon-inner"></div>
+                                    </div>
+                                    <span class="text-stone-700 font-medium text-base md:text-lg leading-snug">${opt.text}</span>
+                                </div>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Selecionar Opção
+        function selectOption(score) {
+            totalScore += score;
+            
+            // Pequeno delay para feedback visual
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    renderQuestion();
+                    // Scroll to top of question container
+                    document.getElementById('question-container').scrollTop = 0;
+                } else {
+                    finishQuiz();
+                }
+            }, 300);
+        }
+
+        // Finalizar Quiz e Mostrar Loading
+        function finishQuiz() {
+            quizScreen.classList.add('hidden-screen');
+            loadingScreen.classList.remove('hidden-screen');
+
+            // Animação de Loading (Checklist)
+            setTimeout(() => { document.getElementById('step-1').classList.remove('opacity-50'); document.getElementById('step-1').innerHTML = '<i class="fas fa-check-circle text-green-600"></i> Analisando sinais físicos'; }, 1000);
+            setTimeout(() => { document.getElementById('step-2').classList.remove('opacity-50'); document.getElementById('step-2').innerHTML = '<i class="fas fa-check-circle text-green-600"></i> Avaliando rotina e ambiente'; }, 2500);
+            setTimeout(() => { document.getElementById('step-3').classList.remove('opacity-50'); document.getElementById('step-3').innerHTML = '<i class="fas fa-check-circle text-green-600"></i> Gerando estratégia de rotina'; }, 4000);
+
+            setTimeout(() => {
+                showResult();
+            }, 5500);
+        }
+
+        // Mostrar Resultado (Página de Vendas)
+        function showResult() {
+            loadingScreen.classList.add('hidden-screen');
+            resultScreen.classList.remove('hidden-screen');
+            window.scrollTo(0, 0);
+
+            const headerBg = document.getElementById('result-header-bg');
+            const headline = document.getElementById('sales-headline');
+            const subheadline = document.getElementById('sales-subheadline');
+            const diagnosisText = document.getElementById('dynamic-diagnosis-text');
+
+            // Lógica de Resultados
+            if (totalScore > 42) {
+                // CRÍTICO
+                headerBg.className = "bg-[#3E2723] text-white pt-8 pb-16 px-4 text-center rounded-b-[2.5rem] shadow-xl relative z-10 border-b-4 border-[#5D4037]";
+                headline.innerHTML = `ALERTA: Nível de Estresse <br><span class="bg-[#b71c1c] text-white px-2 rounded transform -skew-x-6 inline-block mt-2 shadow-lg">CRÍTICO DETECTADO</span>`;
+                diagnosisText.innerHTML = `Com <strong>${totalScore} pontos</strong>, seu cão está vivendo em um estado crônico de alerta (Fight or Flight). <strong>Isso não é "jeito dele".</strong> É um pedido de socorro químico do cérebro. Se não intervermos na rotina agora, o risco de desenvolvimento de doenças psicossomáticas é alto. Você precisa de um "reset" completo na rotina.`;
+            } else if (totalScore >= 25) {
+                // MODERADO
+                headerBg.className = "bg-[#5D4037] text-white pt-8 pb-16 px-4 text-center rounded-b-[2.5rem] shadow-xl relative z-10 border-b-4 border-[#8D6E63]";
+                headline.innerHTML = `ATENÇÃO: Nível de Ansiedade <br><span class="bg-orange-600 text-white px-2 rounded transform -skew-x-6 inline-block mt-2 shadow-lg">MODERADO / ALTO</span>`;
+                subheadline.innerText = "Seu cão está no limite entre o controle e o caos. Veja como evitar que isso piore.";
+                diagnosisText.innerHTML = `Com <strong>${totalScore} pontos</strong>, seu cão já apresenta sinais claros de que não sabe lidar com as próprias emoções. Aquela "baguncinha" ou o choro ocasional são o início de uma bola de neve. A boa notícia é que, com ajustes de enriquecimento ambiental e rotina, você pode reverter isso rapidamente.`;
+            } else {
+                // LEVE
+                headerBg.className = "bg-[#795548] text-white pt-8 pb-16 px-4 text-center rounded-b-[2.5rem] shadow-xl relative z-10 border-b-4 border-[#A1887F]";
+                headline.innerHTML = `RESULTADO: Ansiedade <br><span class="bg-green-600 text-white px-2 rounded transform -skew-x-6 inline-block mt-2 shadow-lg">LEVE / INICIAL</span>`;
+                subheadline.innerText = "Ele é um bom cão, mas o tédio está começando a gerar problemas. Corte o mal pela raiz.";
+                diagnosisText.innerHTML = `Seu cão fez <strong>${totalScore} pontos</strong>. Ele é equilibrado, mas tem gatilhos de tédio e insegurança. O maior perigo agora é a falta de estímulo mental correto, que pode levar a comportamentos destrutivos silenciosos no futuro. É hora de blindar a mente dele com enriquecimento.`;
+            }
+
+            startTimer();
+            setupScrollListener();
+        }
+
+        // Timer de Escassez
+        function startTimer() {
+            let duration = 60 * 15; // 15 minutos
+            const display = document.querySelector('#timer');
+            
+            setInterval(function () {
+                let minutes = parseInt(duration / 60, 10);
+                let seconds = parseInt(duration % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (--duration < 0) {
+                    duration = 0;
+                    display.textContent = "00:00";
+                }
+            }, 1000);
+        }
+
+        // Sticky Button Logic
+        function setupScrollListener() {
+            const offerSection = document.getElementById('offer-section');
+            const stickyBtn = document.getElementById('sticky-cta');
+            
+            window.addEventListener('scroll', () => {
+                const rect = offerSection.getBoundingClientRect();
+                // Mostrar botão se a seção de oferta não estiver visível
+                if (rect.top > window.innerHeight || rect.bottom < 0) {
+                    stickyBtn.classList.remove('translate-y-full');
+                } else {
+                    stickyBtn.classList.add('translate-y-full');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
